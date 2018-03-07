@@ -2,6 +2,7 @@ import pandas as pd
 import tensorflow as tf
 from matplotlib import pyplot as plt
 
+
 def main():
     # read data from csv
     train_data = pd.read_csv("iris_training.csv", names=['f1', 'f2', 'f3', 'f4', 'f5'])
@@ -58,6 +59,7 @@ def main():
         plt.title("Cost Variation")
         # plt.show()
         print("Accuracy: %.2f" % accuracy.eval({X: test_x, Y: [t for t in test_y.as_matrix()]}))
+
 
 if __name__ == '__main__':
     # execute only if run as a script
