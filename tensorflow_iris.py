@@ -5,8 +5,8 @@ from matplotlib import pyplot as plt
 
 def main():
     # read data from csv
-    train_data = pd.read_csv("iris_training.csv", names=['f1', 'f2', 'f3', 'f4', 'f5'])
-    test_data = pd.read_csv("iris_test.csv", names=['f1', 'f2', 'f3', 'f4', 'f5'])
+    train_data = pd.read_csv('iris_training.csv', names=['f1', 'f2', 'f3', 'f4', 'f5'])
+    test_data = pd.read_csv('iris_test.csv', names=['f1', 'f2', 'f3', 'f4', 'f5'])
 
     # encode results to onehot
     train_data['f5'] = train_data['f5'].map({0: [1, 0, 0], 1: [0, 1, 0], 2: [0, 0, 1]})
@@ -43,6 +43,9 @@ def main():
     # initialize variables
     init = tf.global_variables_initializer()
 
+    # Add ops to save and restore all the variables.
+    saver = tf.train.Saver()
+
     # start the tensorflow session
     with tf.Session() as sess:
         costs = []
@@ -52,13 +55,27 @@ def main():
             _, c = sess.run([train, cost], {X: train_x, Y: [t for t in train_y.as_matrix()]})
             costs.append(c)
 
-        print("Training finished!")
+        print('Training finished!')
 
         # plot cost graph
         plt.plot(range(1000), costs)
-        plt.title("Cost Variation")
+        plt.title('Cost Variation')
+        plt.savefig('graph.png')
         # plt.show()
-        print("Accuracy: %.2f" % accuracy.eval({X: test_x, Y: [t for t in test_y.as_matrix()]}))
+        print('Accuracy: %.2f' % accuracy.eval({X: test_x, Y: [t for t in test_y.as_matrix()]}))
+
+        # Save the variables to disk.
+        save_path = saver.save(sess, './model.ckpt')
+
+    # restore
+    # Later, launch the model, use the saver to restore variables from disk, and
+    # do some work with the model.
+    with tf.Session() as sess:
+        # Restore variables from disk.
+        saver.restore(sess, './model.ckpt')
+        print('Model restored.')
+        # Check the values of the variables
+        print('Accuracy: %.2f' % accuracy.eval({X: test_x, Y: [t for t in test_y.as_matrix()]}))
 
 
 if __name__ == '__main__':
