@@ -1,3 +1,1 @@
-model.ckpt.*
-*.meta
-*.png
+output

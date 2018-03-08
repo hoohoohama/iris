@@ -45,16 +45,18 @@ def fit(train_x, train_y, test_x, test_y):
         print("weight : %s" % weight.eval())
         print("bias : %s" % bias.eval())
 
-        # plot cost graph
-        plt.plot(range(1000), costs)
-        plt.title('Cost Variation')
-        plt.savefig('graph.png')
-        # plt.show()
         print('Accuracy: %.2f' % accuracy.eval({X: test_x, Y: [t for t in test_y.as_matrix()]}))
 
         # Save the variables to disk.
-        save_path = saver.save(sess, './model.ckpt')
+        save_path = saver.save(sess, './output/model.ckpt')
 
+        # plot cost graph
+        plt.plot(range(1000), costs)
+        plt.title('Cost Variation')
+
+        # this must be called after calling saver.save otherwise, output directory may not exist
+        plt.savefig('./output/graph.png')
+        # plt.show()
 
 def predict(test_x, test_y):
     # reset all
@@ -84,7 +86,7 @@ def predict(test_x, test_y):
     # do some work with the model.
     with tf.Session() as sess:
         # Restore variables from disk.
-        saver.restore(sess, './model.ckpt')
+        saver.restore(sess, './output/model.ckpt')
         print('Model restored.')
 
         # Check the values of the variables
@@ -97,8 +99,8 @@ def predict(test_x, test_y):
 
 def main():
     # read data from csv
-    train_data = pd.read_csv('iris_training.csv', names=['f1', 'f2', 'f3', 'f4', 'f5'])
-    test_data = pd.read_csv('iris_test.csv', names=['f1', 'f2', 'f3', 'f4', 'f5'])
+    train_data = pd.read_csv('./datasets/iris_training.csv', names=['f1', 'f2', 'f3', 'f4', 'f5'])
+    test_data = pd.read_csv('./datasets/iris_test.csv', names=['f1', 'f2', 'f3', 'f4', 'f5'])
 
     # encode results to onehot
     train_data['f5'] = train_data['f5'].map({0: [1, 0, 0], 1: [0, 1, 0], 2: [0, 0, 1]})
