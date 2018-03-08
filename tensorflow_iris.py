@@ -41,6 +41,10 @@ def fit(train_x, train_y, test_x, test_y):
 
         print('Training finished!')
 
+        # Check the values of the variables
+        print("weight : %s" % weight.eval())
+        print("bias : %s" % bias.eval())
+
         # plot cost graph
         plt.plot(range(1000), costs)
         plt.title('Cost Variation')
@@ -60,7 +64,7 @@ def predict(test_x, test_y):
     X = tf.placeholder(tf.float32, [None, 4])
     Y = tf.placeholder(tf.float32, [None, 3])
 
-    # weight and bias
+    # weight and bias variables
     weight = tf.Variable(tf.zeros([4, 3]))
     bias = tf.Variable(tf.zeros([3]))
 
@@ -84,6 +88,10 @@ def predict(test_x, test_y):
         print('Model restored.')
 
         # Check the values of the variables
+        print("weight : %s" % weight.eval())
+        print("bias : %s" % bias.eval())
+
+        # make prediction
         print('Accuracy: %.2f' % accuracy.eval({X: test_x, Y: [t for t in test_y.as_matrix()]}))
 
 
@@ -105,7 +113,7 @@ def main():
     test_y = test_data.ix[:, 'f5']
 
     fit(train_x, train_y, test_x, test_y)
-    
+
     predict(test_x, test_y)
 
 
